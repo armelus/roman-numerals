@@ -33,31 +33,31 @@ public class NumberToRomanConverter {
      */
     public String convert(int n) {
         if (isMUnit(n)) {
-            return decomposeForMUnit(n);
+            return decomposeForStaticUnit(n, 1000);
         }
         if (isCMUnit(n)) {
-            return decomposeForCMUnit(n);
+            return decomposeForUnitRange(n, 900);
         }
         if (isDUnit(n)) {
-            return decomposeForDUnit(n);
+            return decomposeForUnitRange(n, 500);
         }
         if (isCDUnit(n)) {
-            return decomposeForCDUnit(n);
+            return decomposeForUnitRange(n, 400);
         }
         if (isCUnit(n)) {
-            return decomposeForCUnit(n);
+            return decomposeForStaticUnit(n, 100);
         }
         if (isXCUnit(n)) {
-            return decomposeForXCUnit(n);
+            return decomposeForUnitRange(n, 90);
         }
         if (isLUnit(n)) {
-            return decomposeForLUnit(n);
+            return decomposeForUnitRange(n, 50);
         }
         if (isXLUnit(n)) {
-            return decomposeForXLUnit(n);
+            return decomposeForUnitRange(n, 40);
         }
         if (isXUnit(n)) {
-            return decomposeForXUnit(n);
+            return decomposeForStaticUnit(n, 10);
         }
         if (n == 0) {
             return "";
@@ -78,107 +78,35 @@ public class NumberToRomanConverter {
     }
 
     /**
-     * Convert a number of ten unit.<br/>
-     * Ex: n = 16, result = "XVI".
+     * Convert a number of known unit.<br/>
+     *  Used units are: 10, 100 and 1000. <br/>
+     *  Examples: <br/>
+     *  &nbsp; n = 16, result = "XVI". <br/>
+     *  &nbsp; n = 247, result = "CCXLVII". <br/>
+     *  &nbsp; n = 2751, result = "MMDCCLI".
      * @param n int number to convert
+     * @param unit int represent unit of value.
      * @return String result of conversion
      */
-    private String decomposeForXUnit(int n) {
+    private String decomposeForStaticUnit(int n, int unit) {
         StringBuilder sb = new StringBuilder();
-        int r = n % 10;
-        int d = n / 10;
+        int r = n % unit;
+        int d = n / unit;
         for (int i = 0; i < d; i++) {
-            sb.append(numberMaps.get(10));
+            sb.append(numberMaps.get(unit));
         }
         sb.append(convert(r));
         return sb.toString();
     }
 
     /**
-     * Convert a number between 40 and 49.
+     * Convert a number between a range of values.<br/>
+     * Ex: [50, 89], [900, 999], [500, 899], [400, 499]
      * @param n int number to convert
      * @return String result of conversion
      */
-    private String decomposeForXLUnit(int n) {
-        return numberMaps.get(40) + convert(n - 40);
-    }
-
-    /**
-     * Convert a number between 90 and 99.
-     * @param n int number to convert
-     * @return String result of conversion
-     */
-    private String decomposeForXCUnit(int n) {
-        return numberMaps.get(90) + convert(n - 90);
-    }
-
-    /**
-     * Convert a number between 50 and 89.
-     * @param n int number to convert
-     * @return String result of conversion
-     */
-    private String decomposeForLUnit(int n) {
-        return numberMaps.get(50) + convert(n - 50);
-    }
-
-    /**
-     * Convert a number between 100 and 400.
-     * @param n int number to convert
-     * @return String result of conversion
-     */
-    private String decomposeForCUnit(int n) {
-        StringBuilder sb = new StringBuilder();
-        int r = n % 100;
-        int d = n / 100;
-        for (int i = 0; i < d; i++) {
-            sb.append(numberMaps.get(100));
-        }
-        sb.append(convert(r));
-        return sb.toString();
-    }
-
-    /**
-     * Convert a number between 400 and 499.
-     * @param n int number to convert
-     * @return String result of conversion
-     */
-    private String decomposeForCDUnit(int n) {
-        return numberMaps.get(400) + convert(n - 400);
-    }
-
-    /**
-     * Convert a number between 500 and 899.
-     * @param n int number to convert
-     * @return String result of conversion
-     */
-    private String decomposeForDUnit(int n) {
-        return numberMaps.get(500) + convert(n - 500);
-    }
-
-    /**
-     * Convert a number between 900 and 999.
-     * @param n int number to convert
-     * @return String result of conversion
-     */
-    private String decomposeForCMUnit(int n) {
-        return numberMaps.get(900) + convert(n - 900);
-    }
-
-    /**
-     * Convert number of thousand unit.<br/>
-     *  Ex: n = 2751, result = "MMDCCLI".
-     * @param n number to convert
-     * @return converted integer number into roman number
-     */
-    private String decomposeForMUnit(int n) {
-        StringBuilder sb = new StringBuilder();
-        int r = n % 1000;
-        int d = n / 1000;
-        for (int i = 0; i < d; i++) {
-            sb.append(numberMaps.get(1000));
-        }
-        sb.append(convert(r));
-        return sb.toString();
+    private String decomposeForUnitRange(int n, int baseRange) {
+        return numberMaps.get(baseRange) + convert(n - baseRange);
     }
 
     private boolean isMUnit(int n) {
